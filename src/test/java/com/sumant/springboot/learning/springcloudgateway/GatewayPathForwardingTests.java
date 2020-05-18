@@ -1,13 +1,12 @@
 package com.sumant.springboot.learning.springcloudgateway;
 
 
+import com.github.tomakehurst.wiremock.WireMockServer;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockserver.integration.ClientAndServer;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,10 +15,11 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import static org.mockserver.model.HttpRequest.request;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.status;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockserver.model.HttpResponse.response;
 
 
 @ExtendWith({SpringExtension.class})
@@ -33,17 +33,18 @@ public class GatewayPathForwardingTests {
 	@LocalServerPort
 	private int port;
 
-	private ClientAndServer clientAndServer;
+	private WireMockServer wireMockServer;
 
 
 	@BeforeAll
 	public void init(){
-		clientAndServer = ClientAndServer.startClientAndServer(8080);
+		wireMockServer = new WireMockServer(options().port(8080));
+		wireMockServer.start();
 	}
 
 	@AfterAll
 	public void destroy(){
-		clientAndServer.stop();
+		wireMockServer.stop();
 	}
 
 
@@ -51,7 +52,8 @@ public class GatewayPathForwardingTests {
 	public void pathForwardToDefaultBook_ReturnsDefaultBook(){
 
 		String returnValue = "{\"id\": 0,\"name\":\"DefaultBook\",\"value\":25,\"authorList\":null}";
-		clientAndServer.when(request().withMethod("GET").withPath("/defaultBook")).respond( response().withStatusCode(200).withBody(returnValue));
+		//clientAndServer.when(request().withMethod("GET").withPath("/defaultBook")).respond( response().withStatusCode(200).withBody(returnValue));
+		wireMockServer.stubFor( get("/defaultBook").willReturn( status(200).withBody(returnValue)));
 
 
 		String gatewayUrl = "http://localhost:" + port + "/myDefaultBook";
