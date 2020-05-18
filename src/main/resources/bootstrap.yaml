@@ -1,0 +1,13 @@
+
+eureka:
+  client:
+    oauth2:
+      accessTokenUri: https://p-spring-cloud-services.uaa.run.pivotal.io/oauth/token
+      clientId: p-service-registry-14c7a64e-9ce6-4cee-81c8-5a187ab6578e
+      clientSecret: akAnCoWyQW4b
+    enabled: true
+
+
+spring:
+  application:
+    name: sumantgateway
