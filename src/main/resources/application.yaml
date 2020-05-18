@@ -5,7 +5,7 @@ spring:
     gateway:
       routes:
         - id: path_route
-          uri: http://localhost:8080
+          uri: https://restapitest.cfapps.io
           predicates:
             - Path=/myDefaultBook
           filters:

@@ -38,7 +38,7 @@ public class GatewayPathForwardingTests {
 
 	@BeforeAll
 	public void init(){
-		wireMockServer = new WireMockServer(options().port(8080));
+		wireMockServer = new WireMockServer(options().port(443));
 		wireMockServer.start();
 	}
 
@@ -53,7 +53,7 @@ public class GatewayPathForwardingTests {
 
 		String returnValue = "{\"id\": 0,\"name\":\"DefaultBook\",\"value\":25,\"authorList\":null}";
 		//clientAndServer.when(request().withMethod("GET").withPath("/defaultBook")).respond( response().withStatusCode(200).withBody(returnValue));
-		wireMockServer.stubFor( get("/defaultBook").willReturn( status(200).withBody(returnValue)));
+		wireMockServer.stubFor( get("https://restapitest.cfapps.io/defaultBook").willReturn( status(200).withBody(returnValue)));
 
 
 		String gatewayUrl = "http://localhost:" + port + "/myDefaultBook";
