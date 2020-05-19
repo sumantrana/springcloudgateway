@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: path_route
+          uri: http://localhost:8080/
+          predicates:
+            - Path=/myDefaultBook
+          filters:
+            - RewritePath=/myDefaultBook, /defaultBook
+
+eureka:
+  client:
+    enabled: false
+
