@@ -1,7 +1,7 @@
-applications:
-  - name: sumantcloudgateway
-    disk_quota: 1G
-    instances: 1
-    memory: 1G
-    path: target/springcloudgateway-0.0.1-SNAPSHOT.jar
-    stack: cflinuxfs3
+  applications:
+    - name: sumantcloudgateway
+      disk_quota: 1G
+      instances: 1
+      memory: 1G
+      path: target/springcloudgateway-0.0.1-SNAPSHOT.jar
+      stack: cflinuxfs3  # Specifies the underlying OS Dependencies. cflinuxfs2 corresponds to an Ubuntu Trusty 14.04 container, cflinuxfs3 corresponds to an Ubuntu Bionic 18.04 container

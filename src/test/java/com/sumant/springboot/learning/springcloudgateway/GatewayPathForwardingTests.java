@@ -12,14 +12,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.status;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 
 
 @ExtendWith({SpringExtension.class})
@@ -53,11 +59,25 @@ public class GatewayPathForwardingTests {
 
 		String returnValue = "{\"id\": 0,\"name\":\"DefaultBook\",\"value\":25,\"authorList\":null}";
 		//clientAndServer.when(request().withMethod("GET").withPath("/defaultBook")).respond( response().withStatusCode(200).withBody(returnValue));
-		wireMockServer.stubFor( get("/defaultBook").willReturn( status(200).withBody(returnValue)));
+		wireMockServer.stubFor( get("/defaultBook?vin=abcde12345").withHeader("NadId", equalTo("test")).withHeader("Vin", equalTo("test")).willReturn( status(200).withBody(returnValue)));
+
+
 
 
 		String gatewayUrl = "http://localhost:" + port + "/myDefaultBook";
-		ResponseEntity<String> outputEntity = testRestTemplate.getForEntity(gatewayUrl, String.class);
+
+		MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+		headers.add("NadId", "test");
+		headers.add("Vin", "test");
+
+		//language=JSON
+		String json = "{\n"
+				+ "  \"vin\": \"abcde12345\"\n"
+				+
+				"}";
+
+
+		ResponseEntity<String> outputEntity = testRestTemplate.exchange(gatewayUrl, HttpMethod.POST, new HttpEntity<String>(json, headers), String.class);
 
 
 		assertThat( outputEntity.getStatusCode() ).isEqualTo( HttpStatus.OK );

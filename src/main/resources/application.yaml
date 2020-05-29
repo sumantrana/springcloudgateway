@@ -11,13 +11,13 @@ spring:
             - Path=/myDefaultBook
           filters:
             - RewritePath=/myDefaultBook, /defaultBook
-        - id: book_create_route
-          ##uri: https://sumant-rest-book.cfapps.io/
-          uri: lb://bookrestapi
-          predicates:
-            - Path=/createBook
-          filters:
-            - RewritePath=/createBook, /api/book
+#        - id: book_create_route
+#          ##uri: https://sumant-rest-book.cfapps.io/
+#          uri: lb://bookrestapi
+#          predicates:
+#            - Path=/createBook
+#          filters:
+#            - RewritePath=/createBook, /api/book
 
     loadbalancer:
       ribbon:

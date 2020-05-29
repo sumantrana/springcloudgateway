@@ -1,3 +1,8 @@
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    reactor.netty.http.client: DEBUG
+
 spring:
   cloud:
     gateway:
@@ -7,9 +12,14 @@ spring:
           predicates:
             - Path=/myDefaultBook
           filters:
+            - VerificationFilter
+            - PostToGetFilter
             - RewritePath=/myDefaultBook, /defaultBook
+
 
 eureka:
   client:
     enabled: false
+
+
 
